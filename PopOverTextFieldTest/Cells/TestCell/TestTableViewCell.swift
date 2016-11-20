@@ -25,6 +25,7 @@ class TestTableViewCell: UITableViewCell {
     }
     func setup(_ viewModel: TestCellViewModel){
         self.genderTextfield.options = viewModel.genderOptions
-
+        self.genderTextfield.popOverTableViewMaximumNumberOfOptionsToDisplay = 6
+        self.genderTextfield.popOverTableViewRowHeight = self.genderTextfield.frame.height
     }
 }
