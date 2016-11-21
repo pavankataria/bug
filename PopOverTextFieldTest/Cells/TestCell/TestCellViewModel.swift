@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class TestCellViewModel {
+    var rootView: UIView! = nil
+    
     let genderOptions =  ["male", "female", "LGBT", "female", "male", "female", "male", "female", "male", "female", "male", "female", "male", "female", "male", "female", "male", "female"]
 }
 

@@ -22,6 +22,8 @@
 		051325D21DE2373500D91F2A /* TestCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051325CF1DE2373500D91F2A /* TestCellViewModel.swift */; };
 		051325D31DE2373500D91F2A /* TestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051325D01DE2373500D91F2A /* TestTableViewCell.swift */; };
 		051325D41DE2373500D91F2A /* TestTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 051325D11DE2373500D91F2A /* TestTableViewCell.xib */; };
+		051329F21DE3129700D91F2A /* MLPAutoCompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 051329EC1DE3129700D91F2A /* MLPAutoCompleteTextField.m */; };
+		051329F31DE3129700D91F2A /* NSString+Levenshtein.m in Sources */ = {isa = PBXBuildFile; fileRef = 051329F11DE3129700D91F2A /* NSString+Levenshtein.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,14 @@
 		051325CF1DE2373500D91F2A /* TestCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCellViewModel.swift; sourceTree = "<group>"; };
 		051325D01DE2373500D91F2A /* TestTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTableViewCell.swift; sourceTree = "<group>"; };
 		051325D11DE2373500D91F2A /* TestTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestTableViewCell.xib; sourceTree = "<group>"; };
+		051329EB1DE3129700D91F2A /* MLPAutoCompleteTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextField.h; sourceTree = "<group>"; };
+		051329EC1DE3129700D91F2A /* MLPAutoCompleteTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLPAutoCompleteTextField.m; sourceTree = "<group>"; };
+		051329ED1DE3129700D91F2A /* MLPAutoCompleteTextFieldDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextFieldDataSource.h; sourceTree = "<group>"; };
+		051329EE1DE3129700D91F2A /* MLPAutoCompleteTextFieldDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextFieldDelegate.h; sourceTree = "<group>"; };
+		051329EF1DE3129700D91F2A /* MLPAutoCompletionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompletionObject.h; sourceTree = "<group>"; };
+		051329F01DE3129700D91F2A /* NSString+Levenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Levenshtein.h"; sourceTree = "<group>"; };
+		051329F11DE3129700D91F2A /* NSString+Levenshtein.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Levenshtein.m"; sourceTree = "<group>"; };
+		051329F61DE31BE000D91F2A /* PopOverTextFieldTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PopOverTextFieldTest-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +123,7 @@
 		051325831DE233C600D91F2A /* PopOverTextFieldTest */ = {
 			isa = PBXGroup;
 			children = (
+				051329F61DE31BE000D91F2A /* PopOverTextFieldTest-Bridging-Header.h */,
 				051325B31DE2347100D91F2A /* Vendor */,
 				051325CA1DE236E800D91F2A /* Protocols */,
 				051325C21DE2354A00D91F2A /* ViewControllers */,
@@ -147,6 +158,7 @@
 		051325B31DE2347100D91F2A /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				051329EA1DE3129700D91F2A /* MLPAutoCompleteTextField */,
 				051325B41DE2347100D91F2A /* PopOverTextField */,
 			);
 			path = Vendor;
@@ -227,6 +239,20 @@
 				051325D11DE2373500D91F2A /* TestTableViewCell.xib */,
 			);
 			path = TestCell;
+			sourceTree = "<group>";
+		};
+		051329EA1DE3129700D91F2A /* MLPAutoCompleteTextField */ = {
+			isa = PBXGroup;
+			children = (
+				051329EB1DE3129700D91F2A /* MLPAutoCompleteTextField.h */,
+				051329EC1DE3129700D91F2A /* MLPAutoCompleteTextField.m */,
+				051329ED1DE3129700D91F2A /* MLPAutoCompleteTextFieldDataSource.h */,
+				051329EE1DE3129700D91F2A /* MLPAutoCompleteTextFieldDelegate.h */,
+				051329EF1DE3129700D91F2A /* MLPAutoCompletionObject.h */,
+				051329F01DE3129700D91F2A /* NSString+Levenshtein.h */,
+				051329F11DE3129700D91F2A /* NSString+Levenshtein.m */,
+			);
+			path = MLPAutoCompleteTextField;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -376,6 +402,8 @@
 				051325CC1DE236E800D91F2A /* CellRepresentable.swift in Sources */,
 				051325C61DE2357100D91F2A /* StudentEnrolmentViewController.swift in Sources */,
 				051325D31DE2373500D91F2A /* TestTableViewCell.swift in Sources */,
+				051329F21DE3129700D91F2A /* MLPAutoCompleteTextField.m in Sources */,
+				051329F31DE3129700D91F2A /* NSString+Levenshtein.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +495,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PopOverTextFieldTest/PopOverTextFieldTest-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -509,6 +539,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PopOverTextFieldTest/PopOverTextFieldTest-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -618,6 +650,7 @@
 				051325AB1DE233C700D91F2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		051325AC1DE233C700D91F2A /* Build configuration list for PBXNativeTarget "PopOverTextFieldTestTests" */ = {
 			isa = XCConfigurationList;
@@ -626,6 +659,7 @@
 				051325AE1DE233C700D91F2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		051325AF1DE233C700D91F2A /* Build configuration list for PBXNativeTarget "PopOverTextFieldTestUITests" */ = {
 			isa = XCConfigurationList;
@@ -634,6 +668,7 @@
 				051325B11DE233C700D91F2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

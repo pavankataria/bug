@@ -9,10 +9,10 @@
 import UIKit
 
 protocol PopOverTextFieldDataSource {
-//    func numberOfRows(in popOverTextField: PopOverTextField) -> Int
-//    func textField(_ popOverTextField: PopOverTextField, titleForRow row: Int) -> String?
+    //    func numberOfRows(in popOverTextField: PopOverTextField) -> Int
+    //    func textField(_ popOverTextField: PopOverTextField, titleForRow row: Int) -> String?
     
-//    func heightOfPopOver(for popOverTextField: PopOverTextField) -> CGFloat
+    //    func heightOfPopOver(for popOverTextField: PopOverTextField) -> CGFloat
 }
 protocol PopOverTextFieldDelegate {
     func popOverTextField(_ popOverTextField: PopOverTextField,
@@ -31,35 +31,49 @@ protocol PopOverTextFieldDelegate {
 class PopOverTextField: UITextField {
     
     //MARK: - Public Properties
-//    weak var popOverTextFieldDelegate: PopOverTextFieldDelegate? = nil
+    //    weak var popOverTextFieldDelegate: PopOverTextFieldDelegate? = nil
     var popOverTextFieldDelegate: PopOverTextFieldDelegate? = nil
     
     //TODO: Add ability to add an arrow to the pop over view like a class UIPopOverPresentationController class, which offsets the tableview position even further down. Might have to add a border around the table too or not necessarily.
     
     var options: Array<String> = []
+    weak var popOverTextFieldParentView: UIView? = nil
     var popOverTextFieldAllowsKeyboardInput = false
     var popOverTableViewCornerRadius: CGFloat = 8
     var popOverTableViewMaximumNumberOfOptionsToDisplay: NSInteger = 3
     var popOverTableViewLastVisibleRowHeightToTrim: CGFloat = 0.4
     var popOverTableViewRowHeight: CGFloat = 40
     var popOverTableViewShouldDismissOnOptionSelection: Bool = true
-    
+    var popOverTableViewOriginOffset: CGSize = CGSize(width: 0, height: 0)
     
     //MARK: - Private Properties
     private(set) var popOverTableView: UITableView = UITableView()
-    fileprivate var popOverTableViewOriginOffset: CGSize {
-        return CGSize(width: 0, height: (self.popOverTableViewCornerRadius + self.layer.cornerRadius))
+    
+    
+    fileprivate var cornerRadiiCompensation: CGSize {
+        //        let tableViewOffset = self.popOverTableViewOriginOffset
+        let cornerRadiusCompensation = self.popOverTableViewCornerRadius + self.layer.cornerRadius
+        return CGSize(width: 0, height: cornerRadiusCompensation)
     }
     fileprivate var popOverTableViewContentInset: UIEdgeInsets {
-        return UIEdgeInsets(top: self.popOverTableViewOriginOffset.height, left: 0, bottom: 0, right: 0)
+        return UIEdgeInsets(top: self.cornerRadiiCompensation.height, left: 0, bottom: 0, right: 0)
     }
-
+    
+    fileprivate var maxHeightMultiplier: CGFloat {
+        if self.popOverTableViewMaximumNumberOfOptionsToDisplay == 1 {
+            return 2 - self.popOverTableViewLastVisibleRowHeightToTrim
+        }
+        else {
+            return CGFloat(self.popOverTableViewMaximumNumberOfOptionsToDisplay) - self.popOverTableViewLastVisibleRowHeightToTrim
+        }
+    }
+    
     override var frame: CGRect {
         didSet {
             self.updatePopOverTableViewFrame()
         }
     }
-
+    
     //MARK: - Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -93,7 +107,7 @@ class PopOverTextField: UITextField {
         self.addTarget(self, action: #selector(PopOverTextField.textFieldDidBeginEditing(_:)), for: .editingDidBegin)
         self.addTarget(self, action: #selector(PopOverTextField.textFieldDidEndEditing(_:)), for: .editingDidEnd)
         self.addTarget(self, action: #selector(PopOverTextField.textFieldDidChange(_:)), for: .editingChanged)
-//        self.layer.addObserver(self, forKeyPath: "cornerRadius", options: .new, context: nil)
+        //        self.layer.addObserver(self, forKeyPath: "cornerRadius", options: .new, context: nil)
         addObserver(self, forKeyPath: #keyPath(layer.cornerRadius), options: [.new], context: nil)
     }
     
@@ -107,9 +121,10 @@ class PopOverTextField: UITextField {
             self.updatePopOverTableViewFrame()
         }
     }
-
+    
     override func becomeFirstResponder() -> Bool {
         self.applyShadowProperties(to: self)
+        self.addPopOverView()
         self.popOverTableView.reloadData()
         return super.becomeFirstResponder()
     }
@@ -121,7 +136,12 @@ class PopOverTextField: UITextField {
     }
     
     func textFieldDidBeginEditing(_ textField: PopOverTextField){
-        self.superview?.insertSubview(popOverTableView, belowSubview: self)
+        
+        
+        //        self.superview?.insertSubview(popOverTableView, belowSubview: self)
+        //        let point = self.convert(CGPoint.init(x: 0, y: self.frame.maxY), to: self.view)
+        //        CGPoint pt = [textField convertPoint:CGPointMake(0, textField.frame.origin.y) toView:self.view];
+        //        self.popOverTableViewOriginOffset = CGSize(width: 40, height: point.y);
     }
     
     func textFieldDidEndEditing(_ textField: UITextField){
@@ -159,18 +179,26 @@ class PopOverTextField: UITextField {
     }
     
     
-
+    
 }
 
 //MARK: - SHOW/HIDE
 extension PopOverTextField {
+    func addPopOverView(){
+        let v = (self.popOverTextFieldParentView != nil) ? self.popOverTextFieldParentView : self.superview
+        v!.bringSubview(toFront: self)
+        v!.insertSubview(self.popOverTableView, belowSubview: self)
+    }
     func showPopOver(with rowCount: NSInteger){
         self.popOverTableView.isUserInteractionEnabled = true
-
+        
         self.popOverTextFieldDelegate?.popOverTextField(self, willShowTableView: self.popOverTableView)
+        
+        
         var tableViewFrame = self.createPopOverTableViewFrame(for: self)
         let popOverTableViewHeight = self.calculatePopOverTableViewHeight(with: rowCount)
-        tableViewFrame.size.height = popOverTableViewHeight
+        tableViewFrame.size.height = popOverTableViewHeight + self.cornerRadiiCompensation.height
+        
         self.popOverTableView.frame = tableViewFrame
         self.popOverTableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: false)
         self.popOverTextFieldDelegate?.popOverTextField(self, didShowTableView: self.popOverTableView)
@@ -229,23 +257,23 @@ extension PopOverTextField {
     }
     
     func createPopOverTableViewFrame(for textField: PopOverTextField) -> CGRect {
-        let x = textField.frame.minX
-        let y = textField.frame.maxY - self.popOverTableViewOriginOffset.height
+        let x = textField.frame.minX + self.cornerRadiiCompensation.width + self.popOverTableViewOriginOffset.width
+        let y = textField.frame.maxY - self.cornerRadiiCompensation.height + self.popOverTableViewOriginOffset.height
         let width = textField.frame.width
         let height = textField.frame.height
         return CGRect(x: x, y: y, width: width, height: height)
     }
-
+    
     func calculatePopOverTableViewHeight(with numberOfRows: NSInteger) -> CGFloat {
-        let maxHeightMultiplier: CGFloat = CGFloat(self.popOverTableViewMaximumNumberOfOptionsToDisplay) - self.popOverTableViewLastVisibleRowHeightToTrim
+        
         let heightMultiplier: CGFloat
         if numberOfRows >= self.popOverTableViewMaximumNumberOfOptionsToDisplay {
-            heightMultiplier = maxHeightMultiplier
+            heightMultiplier = self.maxHeightMultiplier
         }
         else {
             heightMultiplier = CGFloat(numberOfRows)
         }
-        let tableViewHeight: CGFloat = heightMultiplier * self.popOverTableViewRowHeight + self.popOverTableViewOriginOffset.height
+        let tableViewHeight: CGFloat = heightMultiplier * self.popOverTableViewRowHeight// + self.tableViewOriginOffset.height
         
         return tableViewHeight
     }
@@ -253,7 +281,7 @@ extension PopOverTextField {
         print(point)
         return super.hitTest(point, with: event)
     }
-
+    
 }
 
 //MARK: - Style
@@ -274,7 +302,7 @@ extension PopOverTextField {
         popOverTextField.layer.shadowColor = UIColor.black.cgColor
         popOverTextField.layer.shadowOffset = CGSize(width: 0, height: 2)
         popOverTextField.layer.shadowOpacity = 0.5
-//        popOverTextField.layer.shadowRadius = 5.0
+        //        popOverTextField.layer.shadowRadius = 5.0
         popOverTextField.layer.masksToBounds =  false
     }
     
@@ -288,4 +316,3 @@ extension PopOverTextField {
         popOverTextField.layer.shadowOpacity = 0
     }
 }
-

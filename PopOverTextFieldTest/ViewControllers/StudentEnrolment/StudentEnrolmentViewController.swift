@@ -28,6 +28,7 @@ class StudentEnrolmentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupTableView()
+        self.viewModel.parentView = self.view
         self.viewModel.reloadData()
     }
     

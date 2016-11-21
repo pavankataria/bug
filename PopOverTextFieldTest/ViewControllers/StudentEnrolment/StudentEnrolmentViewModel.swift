@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class StudentEnrolmentViewModel {
     
@@ -14,6 +15,7 @@ class StudentEnrolmentViewModel {
     let viewModelTypes: [CellRepresentable.Type] = [
         TestCellViewModel.self
     ]
+    var parentView: UIView! = nil
     
     //MARK: - Private Properties
     private(set) var viewModels = [[CellRepresentable]]()
@@ -40,6 +42,7 @@ extension StudentEnrolmentViewModel {
     func prepareTestTableViewCell() -> [CellRepresentable]
     {
         let instance = TestCellViewModel()
+        instance.rootView = self.parentView
         return [instance]
     }
 }
